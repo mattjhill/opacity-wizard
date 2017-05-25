@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/main.css">
+
+    <meta charset='utf-8' />
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+
+    <title>Opacity Wizard</title>
+
+    {{ js_resources|indent(4)|safe }}
+
+    {{ css_resources|indent(4)|safe }}
+
+    {{ plot_script|indent(4)|safe }}
+
+  </head>
+  <body>
+    <!-- A simple form for changing the graph -->
+    <div class="container">
+        <h3>Opacity Wizard</h3>
+        <p>This web app was developed to allow simple and fast visualization of abundance and opacity data for planet and brown dwarf atmospheres. Using widgets, you can choose a pressure, temperature, metallicity, and molecule list, and then create plots of the mixing ratios and opacities.</p>
+        
+        <h3>Parameters</h3>
+
+        <form name="input" method="GET">
+
+            <div class="container">
+                <label>Log Pressure Layer</label>
+                <input type="range"  name="logp" style="width: 300px" min="-6" max="3" step="0.1" value={{ logp }} oninput="showLogPressure(this.value)" />
+                <span id="logp">{{ logp }}</span>
+                <script type="text/javascript">
+                function showLogPressure(newValue)
+                {
+                    document.getElementById("logp").innerHTML=newValue;
+                }
+                </script>
+            </div>
+
+            <div class="container">
+                <label>Temperature</label>
+                <input type="range" name="temp" style="width: 300px" min="75" max="4000" step="5" value={{ temp }} oninput="showTemperature(this.value)" />
+                <span id="temp">{{ temp }}</span>
+                <script type="text/javascript">
+                function showTemperature(newValue)
+                {
+                    document.getElementById("temp").innerHTML=newValue;
+                }
+                </script>
+            </div>
+
+            <div class="container">
+                <label>Metallicity</label>
+                <select name="met">
+                {% for val in [0.0, 0.3, 0.5, 0.7, 1.0, 1.5, 1.7] %}
+                    <option {{ "selected" if met|safe == val }} value={{ val }}>{{ val }}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+            <div class="container">
+                <label>CH<sub>4</sub></label><input type="checkbox" name="ch4" value="True" {{ "checked" if ch4 == "True" }}>
+                <label>H<sub>2</sub>O</label><input type="checkbox" name="h2o" value="True" {{ "checked" if h2o == "True" }}>
+                <label>NH<sub>3</sub></label><input type="checkbox" name="nh3" value="True" {{ "checked" if nh3 == "True" }}>
+                <label>CO</label><input type="checkbox" name="co" value="True" {{ "checked" if co == "True" }}>
+                <label>CO<sub>2</sub></label><input type="checkbox" name="co2" value="True" {{ "checked" if co2 == "True" }}>
+                <label>FeH</label><input type="checkbox" name="feh" value="True" {{ "checked" if feh == "True" }}>
+                <label>H<sub>2</sub>S</label><input type="checkbox" name="h2s" value="True" {{ "checked" if h2s == "True" }}>
+                <label>PH<sub>3</sub></label><input type="checkbox" name="ph3" value="True" {{ "checked" if ph3 == "True" }}>
+                <label>TiO</label><input type="checkbox" name="tio" value="True" {{ "checked" if tio == "True" }}>
+                <label>VO</label><input type="checkbox" name="vo" value="True" {{ "checked" if vo == "True" }}>
+            </div>
+
+            <div class="container">
+                <button type="submit">Submit</button> 
+            </div>
+            
+
+        </form>
+    </div>
+    
+    <div class="container">
+        {{ plot_div|indent(4)|safe }}
+    </div>
+
+    <div class="container">
+        <h3>Citation Information</h3>
+        <p> Support for calculation of opacities and chemical equilibrium tables has been provided by NASA’s Astrophysics Theory and Planetary Atmospheres programs, Mark Marley, PI. </p>
+
+        <h4>Opacity Data</h4>
+        <p>The opacity database is compiled from a variety of sources, combining lab-based data and numerical modeling. See <a href="http://arxiv.org/abs/0706.2374">Freedman et al. 2008</a> and <a href="http://arxiv.org/abs/1409.0026">Freedman et al. 2014</a> for details.</p>
+
+        <h4>Abundance Data</h4>
+        <p>The abundances of molecular, atomic, and ionic species are calculated using the thermochemical equilibrium models of Fegley & Lodders (<a href="http://adsabs.harvard.edu/abs/1994Icar..110..117F">1994</a>, <a href="http://adsabs.harvard.edu/abs/1996ApJ...472L..37F">1996</a>); <a href="http://adsabs.harvard.edu/abs/1999ApJ...519..793L">Lodders (1999)</a>; <a href="http://adsabs.harvard.edu/abs/2002Icar..155..393L">Lodders & Fegley (2002)</a>; Lodders (<a href="http://adsabs.harvard.edu/abs/2002ApJ...577..974L">2002</a>, <a href="http://adsabs.harvard.edu/abs/2003ApJ...591.1220L">2003</a>); <a href="http://arxiv.org/abs/astro-ph/0601381">Lodders & Fegley (2006)</a>. We adopt solar composition elemental abundances from <a href="http://adsabs.harvard.edu/abs/2003ApJ...591.1220L">Lodders 2003</a>). These models assume "rainout" chemistry, in which clouds form in layers, removing material from the atmosphere (see <a href="http://arxiv.org/abs/astro-ph/0601381">Lodders & Fegley (2006)</a> Section 1.4 for an overview). </p>
+
+        <h4>Acknowledgement information</h4>
+        <p>If you find this tool helpful for a project, please include the following acknowledgement in the resulting publication.</p>
+        <blockquote>
+            "This research has benefited from the Opacity Wizard tool developed by Caroline Morley."
+        </blockquote>
+        <p>And you should buy Caroline a <a href="http://en.wikipedia.org/wiki/Beerware">beer</a> at the next conference you attend.</p>
+
+        <h4>Questions or suggestions</h4>
+        <p>If you have any questions or suggestions, please email Caroline Morley at cmorley@ucolick.org</p>
+    </div>
+  </body>
+</html>
